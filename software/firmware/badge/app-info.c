@@ -219,6 +219,9 @@ info_start (OrchardAppContext *context)
 	} else
 		gwinPrintf (p->ghConsole, "not found\n");
 
+	/* Signature */
+	gwinPrintf (p->ghConsole, "Firmware Hack by >_ GreaterUnder");
+
 	return;
 }
 
