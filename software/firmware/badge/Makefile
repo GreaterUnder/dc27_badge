@@ -197,6 +197,7 @@ CSRC += main.c \
 	entity.c \
 	slaballoc.c \
 	app-badge.c \
+	app-bbadge.c \
 	app-battle.c \
 	app-launcher.c \
 	app-video.c \
