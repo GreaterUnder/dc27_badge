@@ -7,6 +7,8 @@
 #include "userconfig.h"
 #include "rand.h"
 
+#include "unlocks.h"
+
 #include <string.h>
 
 #define MILLIS() chVTGetSystemTime()
@@ -71,6 +73,9 @@ void led_pattern_meteor(uint8_t red, uint8_t green, uint8_t blue,
 void led_pattern_unlock(uint8_t* p_index, int8_t* p_direction);
 void led_pattern_unlock_success(uint8_t* p_index);
 void led_pattern_unlock_failed(uint8_t *p_position);
+
+//added
+void led_pattern_lock(uint8_t *p_position);
 
 /* control vars */
 static thread_t * pThread;
@@ -659,6 +664,9 @@ static THD_FUNCTION(bling_thread, arg) {
       case LED_PATTERN_UNLOCK_FAILED:
         led_pattern_unlock_failed(&anim_uindex);
         break;
+      case LED_PATTERN_LOCK:
+        led_pattern_lock(&anim_uindex);
+        break;
       case LED_PATTERN_LEVELUP:
         led_pattern_unlock_success(&anim_uindex);
         break;
@@ -1174,10 +1182,14 @@ void led_pattern_unlock(uint8_t *p_position, int8_t *direction) {
 
   led_set_all(0, 0, 0);
   // pulse the first 16 LEDs to show unlock state.
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < MAX_ULCODES + 1; i++) {
     // pulse the ones that we have enabled.
     if (config->unlocks & ( 1 << i )) {
-      led_set(i,0,(sin(.25 * *p_position) * 64) + 128,0);
+      if (UL_BLACKBADGE & ( 1 << i )) {
+        led_set(i, (sin(.25 * *p_position) * 64) + 128, 0, 0);
+      } else {
+        led_set(i, 0, (sin(.25 * *p_position) * 64) + 128, 0);
+      }
     } else {
       // blue
       led_set(i, 0, 0, 30);
@@ -1215,6 +1227,24 @@ void led_pattern_unlock_success(uint8_t *p_position) {
   // abuse lights @ 40mS, green
   if (*p_position % 2 == 0) {
     led_set_all(0, 255, 0); // green
+  } else {
+    led_set_all(0, 0, 0);
+  };
+
+  ++(*p_position);
+
+  if (*p_position > 1000 / EFFECTS_REDRAW_MS) {
+    *p_position = 0;
+  }
+
+  led_show();
+
+}
+
+void led_pattern_lock(uint8_t *p_position) {
+  // abuse lights @ 40mS
+  if (*p_position % 2 == 0) {
+    led_set_all(220, 0, 0); // red
   } else {
     led_set_all(0, 0, 0);
   };
