@@ -354,19 +354,68 @@ static uint8_t validate_code(OrchardAppContext *context, userconfig *config) {
     putImageFile("images/invite.rgb", 0, 0);
     i2sPlay("sound/levelup.snd");
     chThdSleepMilliseconds(ALERT_DELAY * 2);
-    orchardAppRun(orchardAppByName("Badge"));
+    orchardAppRun(orchardAppByName("Bbadge"));
     return true;
   }
 
-  for (i=0; i < MAX_ULCODES; i++) {
-    if (*unlock_codes[i] == mycode) {
-      // set bit
-      config->unlocks |= (1 << i);
-      strcpy(tmp, unlock_desc[i]);
-      strcat(tmp, " unlocked!");
+  // dump codes
+  if ( mycode == 0x31337 )
+  {
+      unlock_result(p, ">Accessing Codes_");
+      chThdSleepMilliseconds(100);
+      i2sPlay("sound/hacker.snd");
+      chThdSleepMilliseconds(900);
+      for (i=0; i < MAX_ULCODES ; ++i) {
+        snprintf(tmp, MAX_CODE_LEN + 1, "%05x", *unlock_codes[i]);
+	strcat(tmp, " - ");
+	strcat(tmp, unlock_desc[i]);
+        unlock_result(p, tmp);
+        chThdSleepMilliseconds(1000);
+      }
+      orchardAppRun(orchardAppByName("Bbadge"));
+      return true;
+  }
+
+  // Black Badge
+  if ( mycode == 0xb1ac5 ) {
+       sprintf(tmp, "%s", unlock_desc[11]);
+        config->unlocks ^= UL_BLACKBADGE;
+
+      if ( config->unlocks & UL_BLACKBADGE ) {
+        strcat(tmp, " Unlocked");
+        ledSetPattern(LED_PATTERN_LEVELUP);
+        chThdSleepMilliseconds(100);
+        i2sPlay("sound/levelup.snd");
+
+      }else {
+        strcat(tmp, " Locked");
+        ledSetPattern(LED_PATTERN_LOCK);
+        chThdSleepMilliseconds(100);
+	i2sPlay("sound/wilhelm.snd");
+      }
+
       unlock_result(p, tmp);
       chThdSleepMilliseconds(100);
-      ledSetPattern(LED_PATTERN_LEVELUP);
+      configSave(config);
+      chThdSleepMilliseconds(ALERT_DELAY);
+      orchardAppRun(orchardAppByName("Bbadge"));
+      return true;
+      }
+
+  for (i=0; i < MAX_ULCODES; i++) {
+    if (*unlock_codes[i] == mycode) {
+      // invert bit
+      config->unlocks ^= (1 << i);
+      strcpy(tmp, unlock_desc[i]);
+      if (config->unlocks & (1 << i)) {
+        strcat(tmp, " unlocked!");
+        ledSetPattern(LED_PATTERN_LEVELUP);
+      } else {
+        strcat(tmp, " locked!");
+        ledSetPattern(LED_PATTERN_LOCK);
+      }
+      chThdSleepMilliseconds(100);
+      unlock_result(p, tmp);
 
       // save to config
       configSave(config);
@@ -374,9 +423,9 @@ static uint8_t validate_code(OrchardAppContext *context, userconfig *config) {
       i2sPlay("sound/levelup.snd");
       chThdSleepMilliseconds(ALERT_DELAY);
 
-      orchardAppRun(orchardAppByName("Badge"));
+      orchardAppRun(orchardAppByName("Bbadge"));
       return true;
-    }
+      }
   }
   return false;
 }
