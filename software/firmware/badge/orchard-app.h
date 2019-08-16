@@ -55,7 +55,7 @@ extern void orchardAppRadioCallback (OrchardAppRadioEventType type,
 
 extern bool (*app_radio_notify)(void *);
 
-#define UI_IDLE_TIME 10 // after 10 seconds, abort to main
+#define UI_IDLE_TIME 20 // after 20 seconds, abort to main
 
 typedef struct _OrchardAppContext {
   struct orchard_app_instance *instance;
