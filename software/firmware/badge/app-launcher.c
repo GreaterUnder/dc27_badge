@@ -370,7 +370,7 @@ launcher_event (OrchardAppContext *context, const OrchardAppEvent *event)
 	if (event->type == timerEvent) {
 		last_ui_time++;
 		if (last_ui_time == UI_IDLE_TIME) {
-    			orchardAppRun (orchardAppByName ("Badge"));
+    			orchardAppRun (orchardAppByName ("Bbadge"));
 		}
     		return;
   	}
