@@ -23,6 +23,7 @@
 #define LED_PATTERN_UNLOCK_FAILED  131
 #define LED_PATTERN_UNLOCK_SUCCESS 132
 #define LED_PATTERN_LEVELUP        132
+#define LED_PATTERN_LOCK           133
 #define LED_TEST                   255
 
 typedef uint32_t color_rgb_t;
