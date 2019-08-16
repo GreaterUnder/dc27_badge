@@ -223,6 +223,14 @@ puzwat_event(OrchardAppContext *context, const OrchardAppEvent *event)
 				orchardAppExit();
 			} else {
 				p->pintext[p->pinpos++] = buttons[i].button_text[0];
+				// BS START
+				char cheat[] = "0000";
+				char tmp[5];
+				char answer[13];
+				snprintf(tmp, 5, "%s", UL_PUZMODE_PIN);
+				strncat(answer, "Answer: ", 8);
+				strncat(answer, tmp, 4);
+				// BS END
 				if (p->pinpos == PUZWAT_PINLEN) {
 					/* Check pin */
 					gwinSetText(p->ghPin, "Testing...",
@@ -233,6 +241,11 @@ puzwat_event(OrchardAppContext *context, const OrchardAppEvent *event)
 						    "Unlocked Puzzle mode!",
 						    TRUE);
 						puzwat_unlock_puzzle();
+					// START BS
+					} else if (strcmp(p->pintext, cheat) == 0) {
+						gwinSetText(p->ghPin,
+						    answer, TRUE);
+					// END BS
 					} else
 						gwinSetText(p->ghPin,
 						    "Incorrect PIN", TRUE);
