@@ -17,13 +17,13 @@ void splash_footer(void) {
 
   gdispDrawStringBox (0, 210, gdispGetWidth(),
 		      gdispGetFontMetric(font, fontHeight),
-		      "DA BOMB! DC 27 (2019)",
+		      "DA BOMB! DC 27 (2019) >_ Hack",
 		      font, Red, justifyCenter);
 
   gdispDrawStringBox (0, 225, gdispGetWidth(),
 		      gdispGetFontMetric(font, fontHeight),
 		      BUILDTIME,
-		      font, White, justifyCenter);
+		      font, Cyan, justifyCenter);
 
   gdispCloseFont (font);
 
@@ -70,7 +70,7 @@ void splash_welcome(void)
       splash_footer();
     }
 
-    chThdSleepMilliseconds (IMG_SPLASH_DISPLAY_TIME);
+    chThdSleepMilliseconds (IMG_SPLASH_DISPLAY_TIME * 2);
     curimg++;
   }
   return;
