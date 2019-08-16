@@ -212,6 +212,7 @@ CSRC += main.c \
 	app-setup.c \
 	app-joytest.c \
 	app-photos.c \
+	app-my-photos.c \
 	app-unlock.c \
 	app-otasend.c \
 	app-otarecv.c \
